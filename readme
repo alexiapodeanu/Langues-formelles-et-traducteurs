@@ -1,0 +1,133 @@
+## 1. Application des paramètres imposés
+
+Le langage choisi dans ce projet a été déterminé à partir des paramètres A, B et C donnés dans l’énoncé.
+
+* **Paramètre A:** Initiala numelui de familie, *Podeanu*. Litera *P* corespunde poziției 16 în alfabet.
+`16 mod 10 + 1 = 7`
+Categoria: **langage extraterrestre**.
+* **Paramètre B:** Ziua de naștere, *7*.
+`7 mod 7 + 1 = 1`
+Corespondență: **coordonnées spatiales / directions**.
+* **Paramètre C:** Initiala prenumelui, *Alexia*. Litera *A* corespunde poziției 1 în alfabet.
+`1 mod 4 + 1 = 2`
+Cerință: **le programme doit se terminer par un symbole spécial**.
+
+**Rezultat:** Limbajul **Aethra** este un limbaj extraterestru utilizând coordonate spațiale și direcții, cu final de program marcat obligatoriu prin simbolul `~`.
+
+
+## 2. Description du langage Aethra
+
+### Description informelle
+
+Le langage *Aethra* est imaginé comme une forme de communication extraterrestre destinée à transmettre des missions dans un environnement spatial. Chaque symbole a une fonction précise et chaque instruction représente un ordre complet adressé à une unité autonome.
+
+### Structure d'une instruction
+
+Une instruction suit une structure fixe de cinq tokens :
+`MISSION UNIT COORD DIRECTION MODE`
+
+* **MISSION:** type d’action à effectuer
+* **UNIT:** entité exécutante
+* **COORD:** position dans l’espace
+* **DIRECTION:** orientation spatiale
+* **MODE:** manière d’exécution
+
+### Signification des tokens
+
+#### MISSION
+
+* **ENIH:** exploration
+* **VORI:** analyse (scan)
+* **ELUN:** transmission
+* **KONN:** collecte
+* **THEN:** défense
+* **OMIR:** synchronisation
+
+#### DIRECTION
+
+* **AN / SOR / ESH / VAL:** Nord, Sud, Est, Vest
+* **ANESH / ANVAL / SORESH / SORVAL:** Direcții compuse
+* **CI / CO / CU / CA:** Sus, Jos, Stânga, Dreapta
+
+#### MODE
+
+* **NANI:** impulsion active (rapid)
+* **NANA:** déplacement lent
+* **SHAI:** furtivité (stealth)
+* **ORUN:** maintien orbital
+* **VELA:** vigilance
+
+#### UNIT (entité exécutante)
+
+Format: `@` urmat de o literă (clasa), un cifră (nivel) și o altă literă (sector).
+Exemple: `@A7Z`, `@B8H`.
+
+#### COORD (coordonnées spatiales)
+
+Format: `<X|Y|Z>` unde X, Y, Z sunt numere întregi pozitive.
+
+#### Symboles spéciaux
+
+* `!`: SEPARATOR (între două instrucțiuni)
+* `~`: END (finalul programului)
+
+## 3. Exemples
+
+### Phrases valides
+
+1. `ENIH @A7Z <3|7|9> ANESH SHAI ~`
+2. `VORI @B8H <12|4|1> CI VELA ! ELUN @C9Y <5|8|2> ESH NANI ~`
+
+### Phrases invalides
+
+* `ENIH @A7Z 3|7|9 ANESH SHAI` (lipsesc delimitatorii `< >`)
+* `VORI A7Z <3|7|9> ANESH SHAI` (lipsește simbolul `@`)
+* `KONN @D4X <3|7|9> SHAI ANESH` (ordine incorectă a token-urilor)
+
+
+## 4. Définition formelle
+
+### Alphabet
+
+`Σ = {A, B, C, ..., Z, 0, 1, 2, ..., 9, @, <, >, |, !, ~}`
+
+### Grammaire
+
+* `INSTRUCTION = MISSION UNIT COORD DIRECTION MODE`
+* `PROGRAM = INSTRUCTION (! INSTRUCTION)* ~`
+
+### Expressions régulières
+
+* **MISSION:** `ENIH|VORI|ELUN|KONN|THEN|OMIR`
+* **UNIT:** `@[A-Z][0-9][A-Z]`
+* **COORD:** `<[0-9]+|[0-9]+|[0-9]+>`
+* **DIRECTION:** `AN|SOR|ESH|VAL|ANESH|ANVAL|SORESH|SORVAL|CI|CO|CU|CA`
+* **MODE:** `NANI|NANA|SHAI|ORUN|VELA`
+
+
+## 5. Automates (Résumé)
+
+* **UNIT:** Un automat finit determinist (DFA) care trece prin stări succesive pentru `@`, literă, cifră și literă.
+* **COORD:** Un automat care validează structura `<` urmată de cifre, separatorul `|`, alte cifre, al doilea `|`, cifre finale și `>`.
+* **DIRECTION:** Un automat ramificat (NFA convertit în DFA) care recunoaște cuvintele cheie specifice direcțiilor.
+
+
+## 6. Lexer (Implémentation)
+
+L’analyseur lexical a été implémenté en **Java**. Acesta parcurge fișierul text și identifică unitățile lexicale folosind expresii regulate.
+
+**Exemple de sortie du Lexer:**
+
+```text
+MISSION ENIH
+UNIT @A7Z
+COORD <3|7|9>
+DIRECTION ANESH
+MODE SHAI
+SEPARATOR !
+MISSION VORI
+END ~
+
+## 7. Conclusion
+
+Le langage Aethra illustre efficacement le lien entre la théorie des langages formels et la conception de systèmes symboliques originaux. À travers la définition des tokens, des expressions régulières et des automates, nous avons construit un système capable de décrire des instructions spatiales de manière non ambiguë et analysable automatiquement.</X|Y|Z>
